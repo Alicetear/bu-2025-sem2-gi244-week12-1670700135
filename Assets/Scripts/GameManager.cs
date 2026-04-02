@@ -29,22 +29,48 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-
+        restartButton.onClick.AddListener(RestartGame);
     }
 
     void Start()
     {
+        score = 0;
+        scoreText.text = "Score: " + score;
         StartGame();
     }
 
     void StartGame()
     {
         StartCoroutine(SpawnTargets());
+        UpdateScore(0);
+        gameOverScreen.SetActive(false);
+        isGameActive = true;
     }
 
     IEnumerator SpawnTargets()
     {
-        yield return null;
+        while (isGameActive)
+        {
+            yield return new WaitForSeconds(spawnRate);
+            int index = Random.Range(0, targets.Count);
+            Instantiate(targets[index]);
+        }
+    }
+
+    public void UpdateScore(int scoreToAdd)
+    {
+        score += scoreToAdd;
+        scoreText.text = "Score: " + score;
+    }
+    public void GameOver()
+    {
+        gameOverScreen.SetActive(true);
+        isGameActive = false;
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 
