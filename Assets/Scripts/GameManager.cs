@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEditor.ShaderKeywordFilter;
 
 public class GameManager : MonoBehaviour
 {
@@ -34,7 +35,20 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        scoreText.text = "Score: " + score;
         StartGame();
+    }
+
+    /*public void UpdateScore(int score)
+    {
+        this.score = this.score + score;
+        scoreText.text = "Score: " + this.score;
+    }*/
+
+    public void UpdateScore(int s)
+    {
+        score += s;
+        scoreText.text = "Score: " + score;
     }
 
     void StartGame()
@@ -44,7 +58,13 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnTargets()
     {
-        yield return null;
+        while (true)
+        {
+          int idx = Random.Range(0, targets.Count);
+          var prefab = targets[idx];
+          Instantiate(prefab);
+          yield return new WaitForSeconds(spawnRate);
+        }
     }
 }
 
